@@ -1,0 +1,91 @@
+/* #0CECDD; */
+/* Patrick Hand */
+
+body{
+    background-color:#FF0; 
+    text-align: center;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 25px;
+}
+
+.heading{
+    margin: 5% auto 1% auto;
+}
+
+h1{
+    margin-top: 3%;
+}
+
+.forms{
+    margin: auto;
+}
+
+.form_content{
+    margin: 0 auto 0 auto;
+    text-align: center;
+    display: block;
+    width: 30%;
+    height: 40px;
+    font-size: larger;
+    border-radius: 20px 20px 0 0;
+    min-width: 200px;
+}
+
+.form_bottom{
+    border-radius: 0 0 25px 25px;
+    margin-bottom: 1%;
+}
+.form_div{
+    background-color: #0CECDD;
+}
+
+.navbar-toggler{
+    color: black;
+    border-color: black;
+}
+
+.logo{
+    margin: 1% auto 1% auto;
+    max-width:100%;
+    display: inline-block;
+    border-radius: 35%;
+}
+
+.btn{
+    max-width: 40%;
+    font-size: larger;
+    margin-bottom: 3%;
+}
+
+img{
+    max-width: 100%;
+}
+
+#contact{
+    padding-top: 10%;
+    padding-bottom: 10%;
+}
+
+.color_contact{
+    background-color: #9EDE73;
+    margin-top: 0%;
+}
+
+.footer{
+    padding-top: 10%;
+    margin-bottom: 0;
+}
+
+.navbar-brand{
+    font-size: 40px;
+    color: #C400FF;
+}
+
+.nav-item a{
+    color: #C400FF;
+}
+
+/* As of Bootstrap 5 beta, left and right have been replaced by start and end for RTL support. Therefore the margin utilities changed for Bootstrap 5 beta:
+
+    ml-auto => ms-auto (start)
+    mr-auto => me-auto (end) */
