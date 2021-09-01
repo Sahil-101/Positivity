@@ -29,11 +29,18 @@ h1{
     font-size: larger;
     border-radius: 20px 20px 0 0;
     min-width: 200px;
+    outline: none;
 }
 
+input:focus{
+    box-shadow:0 0 1pt 1pt #C400FF;
+}
 .form_bottom{
     border-radius: 0 0 25px 25px;
     margin-bottom: 1%;
+}
+.form_bottom:focus{
+    box-shadow:0 1pt 0 1pt #C400FF; 
 }
 .form_div{
     background-color: #0CECDD;
@@ -85,6 +92,10 @@ img{
     color: #C400FF;
 }
 
+.form_content_middle{
+    border-radius: 0%;
+    box-shadow:0 2pt 0 0 #C400FF; 
+}
 /* As of Bootstrap 5 beta, left and right have been replaced by start and end for RTL support. Therefore the margin utilities changed for Bootstrap 5 beta:
 
     ml-auto => ms-auto (start)
