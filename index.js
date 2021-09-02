@@ -8,8 +8,8 @@ const https = require("https");
 const { create } = require("domain");
 
 var MESSAGE;
-const hour = 11;
-const minute = 49;
+const hour = 7;
+const minute = 0;
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
