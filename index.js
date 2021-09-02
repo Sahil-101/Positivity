@@ -225,7 +225,7 @@ app.post("/", (req, res) => {
 
 
 
-app.listen(port, () => {
+app.listen(porcess.env.PORT || port, () => {
     console.log("Successfully running on port " + port);
 })
 
