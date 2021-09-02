@@ -124,6 +124,7 @@ function start_schedule() {
 
 start_schedule();
 
+
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 })
@@ -141,11 +142,15 @@ app.post("/", (req, res) => {
     console.log(hash_email);
 
     async function update_subscribe() {
+        try{
         const response = await client.lists.setListMember(
             listId,
             hash_email,
             { email_address: data.email, status: "subscribed" }
-        );
+        );}
+        catch(err){
+            console.log(err);
+        }
         res.sendFile(__dirname + "/successful.html");
     };
 
@@ -164,6 +169,7 @@ app.post("/", (req, res) => {
 
         }
         catch (error) {
+            res.send("<h1>Cannot Subscribe Contact Admin</h1>");
             console.log(error);
         }
     };
@@ -175,6 +181,7 @@ app.post("/", (req, res) => {
                     listId,
                     hash_email
                 );
+                console.log(response);
                 if (response.status == "subscribed") {
                     res.sendFile(__dirname + "/already_exist.html")
                 }
