@@ -147,16 +147,17 @@ app.post("/", (req, res) => {
             listId,
             hash_email,
             { email_address: data.email, status: "subscribed" }
-        );}
-        catch(err){
-            console.log(err);
-        }
+        );
         res.sendFile(__dirname + "/successful.html");
+    }
+        catch(err){
+          //  console.log(err);
+        }
     };
 
     async function run() {
         try {
-            response = await client.lists.addListMember(listId, {
+            const response = await client.lists.addListMember(listId, {
                 email_address: data.email,
                 status: "subscribed",
                 merge_fields: {
@@ -177,9 +178,10 @@ app.post("/", (req, res) => {
     if (req.body.button == "1") {
         async function check_and_subcribe() {
             try {
+                console.log("check and subscribe");   
                 const response = await client.lists.getListMember(
                     listId,
-                    hash_email
+                    hash_email,
                 );
                 console.log(response);
                 if (response.status == "subscribed") {
@@ -190,7 +192,8 @@ app.post("/", (req, res) => {
                 }
             }
             catch (error) {
-                if (error == 404) {
+               // console.log(error); 
+                if (error.status == 404) {
                     run();
                 }
             }
@@ -200,6 +203,7 @@ app.post("/", (req, res) => {
     else {
         async function unsubscribe() {
             try {
+                console.log("unsubscribe");
                 const response = await client.lists.updateListMember(
                     listId,
                     hash_email,
@@ -207,6 +211,7 @@ app.post("/", (req, res) => {
                         status: "unsubscribed"
                     }
                 );
+                res.sendFile(__dirname + "/unsubscribed.html");
             }
             catch (error) {
                 if (error.statusCode == 404) {
@@ -216,7 +221,6 @@ app.post("/", (req, res) => {
         }
 
         unsubscribe();
-        res.sendFile(__dirname + "/unsubscribed.html");
     }
 })
 
@@ -238,8 +242,3 @@ app.listen(process.env.PORT || port, () => {
 //List_id 7a72e8ae47
 
 //http://quotes.rest/qod.json?category=inspire
-
-// "quote": "You gotta commit. You've gotta go out there and improvise and you've gotta be completely unafraid to die. You've got to be able to take a chance to die. And you have to die lots. You have to die all the time.",
-// "length": "208",
-// "author": "Bill Murray",
-// "tags": [
