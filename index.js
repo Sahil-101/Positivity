@@ -95,7 +95,7 @@ function get_message_and_update_campaign() {
             console.log(QUOTES, AUTHOR);
 
             //constructing the main message with quote and author added
-            MESSAGE = "Dear User\nStart today's day with the great saying by '"+AUTHOR+"'\nQuote: "+QUOTES+"\nRegards\nPositivity Team";
+            MESSAGE = "Dear User\n\nStart today's day with the great saying by '"+AUTHOR+"'\nQuote: "+QUOTES+"\n\nRegards\nPositivity Team";
             console.log(MESSAGE);
 
             //calling the update_content function with given message
