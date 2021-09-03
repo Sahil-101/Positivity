@@ -11,7 +11,7 @@ const https = require("https");
 //Message which is to be sent through mail
 var MESSAGE;
 //time at which mail has to be sent
-const hour = 13;
+const hour = 0;
 const minute = 30;
 
 //express instance
