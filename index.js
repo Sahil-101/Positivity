@@ -107,13 +107,11 @@ function get_message_and_update_campaign() {
     });
 }
 
-var time;
-
 //Function that makes an instance of date and checks whether hours and minutes
 //are equal to what specified above in app if equal call get_message and send the mail
 //otherwise try after 1 minute 60000 milliseconds
 function start_schedule() {
-    time = new Date();
+    var time = new Date();
     console.log(time.getHours());
     console.log(time.getMinutes());
     let timeout=60000;
@@ -134,112 +132,105 @@ app.get("/", (req, res) => {
 
 app.post("/", (req, res) => {
 
-    var t = new Date();
-    res.write(t.toString());
-    res.write("\n");
-    res.write(time.toString());
-    res.send(); 
+    console.log(req.body);
 
+    //extract data out of req body
+    var data = {
+        email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+    }
+    //hash the mail which is required by mailchimp api later
+    const hash_email = md5(data.email.toLowerCase());
+    console.log(hash_email);
 
-    // console.log(req.body);
+    async function update_subscribe() {
+        try{
+        const response = await client.lists.setListMember(
+            listId,
+            hash_email,
+            { email_address: data.email, status: "subscribed" }
+        );
+        res.sendFile(__dirname + "/successful.html");
+    }
+        catch(err){
+          //  console.log(err);
+        }
+    };
 
-    // //extract data out of req body
-    // var data = {
-    //     email: req.body.email,
-    //     firstName: req.body.firstName,
-    //     lastName: req.body.lastName,
-    // }
-    // //hash the mail which is required by mailchimp api later
-    // const hash_email = md5(data.email.toLowerCase());
-    // console.log(hash_email);
+    async function run() {
+        try {
+            const response = await client.lists.addListMember(listId, {
+                email_address: data.email,
+                status: "subscribed",
+                merge_fields: {
+                    FNAME: data.firstName,
+                    LNAME: data.lastName
+                }
+            });
 
-    // async function update_subscribe() {
-    //     try{
-    //     const response = await client.lists.setListMember(
-    //         listId,
-    //         hash_email,
-    //         { email_address: data.email, status: "subscribed" }
-    //     );
-    //     res.sendFile(__dirname + "/successful.html");
-    // }
-    //     catch(err){
-    //       //  console.log(err);
-    //     }
-    // };
+            res.sendFile(__dirname + "/successful.html");
 
-    // async function run() {
-    //     try {
-    //         const response = await client.lists.addListMember(listId, {
-    //             email_address: data.email,
-    //             status: "subscribed",
-    //             merge_fields: {
-    //                 FNAME: data.firstName,
-    //                 LNAME: data.lastName
-    //             }
-    //         });
+        }
+        catch (error) {
+            res.send("<h1>Cannot Subscribe Contact Admin</h1>");
+            console.log(error);
+        }
+    };
 
-    //         res.sendFile(__dirname + "/successful.html");
+    //check if user wants to subscribe or unsubscribe 
+    // 1 for subscribe 2 for unsubscribe
 
-    //     }
-    //     catch (error) {
-    //         res.send("<h1>Cannot Subscribe Contact Admin</h1>");
-    //         console.log(error);
-    //     }
-    // };
+    if (req.body.button == "1") {
+        //check if already a user if yes then check status 
+        //status = subscriber if yes then return already exist html else update status
+        //else add new user
+        async function check_and_subcribe() {
+            try {
+                console.log("check and subscribe");   
+                const response = await client.lists.getListMember(
+                    listId,
+                    hash_email,
+                );
+                console.log(response);
+                if (response.status == "subscribed") {
+                    res.sendFile(__dirname + "/already_exist.html")
+                }
+                else {
+                    update_subscribe();
+                }
+            }
+            catch (error) {
+               // console.log(error); 
+                if (error.status == 404) {
+                    run();
+                }
+            }
+        };
+        check_and_subcribe();
+    }
+    else {
+        async function unsubscribe() {
+            try {
+                console.log("unsubscribe");
+                const response = await client.lists.updateListMember(
+                    listId,
+                    hash_email,
+                    {
+                        status: "unsubscribed"
+                    }
+                );
+                res.sendFile(__dirname + "/unsubscribed.html");
+            }
+            catch (error) {
+                if (error.statusCode == 404) {
+                    res.send("not a subscriber");
+                }
+            }
+        }
 
-    // //check if user wants to subscribe or unsubscribe 
-    // // 1 for subscribe 2 for unsubscribe
-
-    // if (req.body.button == "1") {
-    //     //check if already a user if yes then check status 
-    //     //status = subscriber if yes then return already exist html else update status
-    //     //else add new user
-    //     async function check_and_subcribe() {
-    //         try {
-    //             console.log("check and subscribe");   
-    //             const response = await client.lists.getListMember(
-    //                 listId,
-    //                 hash_email,
-    //             );
-    //             console.log(response);
-    //             if (response.status == "subscribed") {
-    //                 res.sendFile(__dirname + "/already_exist.html")
-    //             }
-    //             else {
-    //                 update_subscribe();
-    //             }
-    //         }
-    //         catch (error) {
-    //            // console.log(error); 
-    //             if (error.status == 404) {
-    //                 run();
-    //             }
-    //         }
-    //     };
-    //     check_and_subcribe();
-    // }
-    // else {
-    //     async function unsubscribe() {
-    //         try {
-    //             console.log("unsubscribe");
-    //             const response = await client.lists.updateListMember(
-    //                 listId,
-    //                 hash_email,
-    //                 {
-    //                     status: "unsubscribed"
-    //                 }
-    //             );
-    //             res.sendFile(__dirname + "/unsubscribed.html");
-    //         }
-    //         catch (error) {
-    //             if (error.statusCode == 404) {
-    //                 res.send("not a subscriber");
-    //             }
-    //         }
-    //     }
-
-    //     unsubscribe();
-    // }
+        unsubscribe();
+    }
 })
 
 
